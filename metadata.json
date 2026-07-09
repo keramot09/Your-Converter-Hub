@@ -1,0 +1,7 @@
+{
+  "name": "OmniFile Converter Suite",
+  "description": "Comprehensive multi-format file conversion, image processing, audio/video extraction, PDF tools, unit conversion, and AI speech transcription platform.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
