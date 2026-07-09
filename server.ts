@@ -25,6 +25,8 @@ async function startServer() {
       if (!apiKey) {
         return res.status(500).json({ error: "GEMINI_API_KEY is not configured on the server." });
       }
+      console.log("API key exists:", !!apiKey);
+      console.log("API key prefix:", apiKey.substring(0, 5));
 
       const modelEngine = req.body.engine || "gemini-2.5-flash";
       const file = req.file;
