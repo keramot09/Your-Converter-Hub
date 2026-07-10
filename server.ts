@@ -54,7 +54,7 @@ async function startServer() {
 Format the output as clean JSON with keys: "transcript", "summary", "language", "wordCount".`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-lite",
         contents: [
           {
             role: "user",
