@@ -59,9 +59,9 @@ export function Sidebar({ currentTool, onSelectTool, isOpen, setIsOpen }: Sideba
             </div>
             <div>
               <h1 className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
-                OmniFile Suite
+                YOUR Converter
               </h1>
-              <p className="text-xs text-slate-400 font-mono">Professional Converter</p>
+              <p className="text-xs text-slate-400 font-mono">Your All In One Professional Converter</p>
             </div>
           </div>
         </div>
