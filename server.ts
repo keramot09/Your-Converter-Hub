@@ -47,12 +47,13 @@ async function startServer() {
 
       const ai = new GoogleGenAI({ apiKey });
 
-      const promptText = `Please act as a professional speech-to-text transcription engine (${modelEngine === 'whisper' ? 'OpenAI Whisper style accurate transcription' : 'Google Cloud / Gemini Speech model'}). Provide:
-1. Exact verbatim transcript of the spoken words in the audio.
-2. A structured summary with bullet points.
-3. Detected language and tone.
+      const promptText = `Please act as a professional multilingual speech-to-text transcription engine.
+CRITICAL INSTRUCTION:
+1. Detect the exact language/dialect spoken in the audio.
+2. Transcribe the spoken words VERBATIM in their original native language and script (e.g., if the audio is in Hindi, output Hindi script; if Tamil, Tamil script; if English, English; if Spanish, Spanish; if Bengali, Bengali, etc.). DO NOT translate the speech into any other language.
+3. Provide a structured summary with bullet points (written in the detected language or English for clarity).
+4. Accurately identify and state the detected language and tone.
 Format the output as clean JSON with keys: "transcript", "summary", "language", "wordCount".`;
-
       const response = await ai.models.generateContent({
         model: "gemini-3.1-flash-lite",
         contents: [
