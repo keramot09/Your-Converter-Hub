@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FileStack, Upload, Download, Plus, Trash2, CheckCircle2, Layers } from 'lucide-react';
-import { jsPDF } from 'jspdf';
+import { PDFDocument } from 'pdf-lib';
 import { ConversionItem } from '../types';
 
 interface PdfToolsProps {
@@ -34,27 +34,21 @@ export function PdfTools({ onAddHistory }: PdfToolsProps) {
     setMergedResult(null);
   };
 
-  const handleMergePdf = () => {
+  const handleMergePdf = async () => {
     if (files.length === 0) return;
     setIsMerging(true);
 
-    setTimeout(() => {
-      const doc = new jsPDF();
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(20);
-      doc.text("OmniFile Merged Document Collection", 20, 20);
+    try {
+      const mergedPdf = await PDFDocument.create();
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach((page) => mergedPdf.addPage(page));
+      }
 
-      let yPos = 35;
-      files.forEach((f, idx) => {
-        doc.setFontSize(14);
-        doc.text(`Document ${idx + 1}: ${f.name}`, 20, yPos);
-        yPos += 10;
-        doc.setFontSize(10);
-        doc.text(`Original Size: ${(f.size / 1024).toFixed(1)} KB`, 20, yPos);
-        yPos += 15;
-      });
-
-      const pdfBlob = doc.output('blob');
+      const mergedPdfBytes = await mergedPdf.save();
+      const pdfBlob = new Blob([mergedPdfBytes as Uint8Array], { type: 'application/pdf' });
       const url = URL.createObjectURL(pdfBlob);
       const mergedName = `merged_documents_${Date.now()}.pdf`;
 
@@ -77,7 +71,11 @@ export function PdfTools({ onAddHistory }: PdfToolsProps) {
         downloadUrl: url,
         resultSize: pdfBlob.size
       });
-    }, 800);
+    } catch (err) {
+      console.error("PDF Merge error:", err);
+      setIsMerging(false);
+      alert("Failed to merge PDFs. Please ensure all uploaded files are valid PDF documents.");
+    }
   };
 
   return (
